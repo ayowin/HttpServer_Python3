@@ -1,6 +1,7 @@
 # HttpServer
 
 *HttpServer base on python3 with Flask and PyMySQL.*
+*IDE use Pycharm.*
 
 ### depends
 ```shell
