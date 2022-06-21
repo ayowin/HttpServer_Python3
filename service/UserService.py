@@ -42,12 +42,13 @@ class Service:
                 mysqlConnection = MysqlPool.Pool.getConnection();
                 cursor = mysqlConnection.cursor();
                 sql = "insert into user (`username`,`password`) value ('{:s}','{:s}');".format(username,password);
-                effectRow = cursor.execute(sql);
-                if effectRow > 0 :
+                try :
+                    cursor.execute(sql);
                     response["result"] = "success";
-                else :
+                except Exception as e :
                     response["result"] = "failed";
                     response["reason"] = "insert exception";
+
             else :
                 response["result"] = "failed";
                 response["reason"] = "invalid verify code";
@@ -110,36 +111,38 @@ class Service:
                     permissionIdSet = set();
                     # select roles
                     roleId = data[3];
-                    roleId = roleId.split(",");
-                    sql = "select `role`,`permission_id` from `role` where ";
-                    for id in roleId :
-                        if id == roleId[len(roleId)-1] :
-                            sql += "id={:s}".format(id);
-                        else:
-                            sql += "id={:s} or ".format(id);
-                    cursor.execute(sql);
-                    item = cursor.fetchone(); # [role,permission_id]
-                    while item != None :
-                        user["role"].append(item[0]);
-                        permissionId = item[1].split(",");
-                        for id in permissionId :
-                            permissionIdSet.add(id);
-                        item = cursor.fetchone();
+                    if roleId != None :
+                        roleId = roleId.split(",");
+                        sql = "select `role`,`permission_id` from `role` where ";
+                        for id in roleId :
+                            if id == roleId[len(roleId)-1] :
+                                sql += "id={:s}".format(id);
+                            else:
+                                sql += "id={:s} or ".format(id);
+                        cursor.execute(sql);
+                        item = cursor.fetchone(); # [role,permission_id]
+                        while item != None :
+                            user["role"].append(item[0]);
+                            permissionId = item[1].split(",");
+                            for id in permissionId :
+                                permissionIdSet.add(id);
+                            item = cursor.fetchone();
 
                     # select permissions
-                    sql = "select `permission` from `permission` where ";
-                    while len(permissionIdSet) > 0 :
-                        id = permissionIdSet.pop();
-                        if len(permissionIdSet) > 0 :
-                            sql += "id={:s} or ".format(id);
-                        else:
-                            sql += "id={:s}".format(id);
-                        permissionIdSet.discard(id);
-                    cursor.execute(sql);
-                    item = cursor.fetchone();  # [role,permission_id]
-                    while item != None:
-                        user["permission"].append(item[0]);
-                        item = cursor.fetchone();
+                    if len(permissionIdSet) > 0 :
+                        sql = "select `permission` from `permission` where ";
+                        while len(permissionIdSet) > 0 :
+                            id = permissionIdSet.pop();
+                            if len(permissionIdSet) > 0 :
+                                sql += "id={:s} or ".format(id);
+                            else:
+                                sql += "id={:s}".format(id);
+                            permissionIdSet.discard(id);
+                        cursor.execute(sql);
+                        item = cursor.fetchone();  # [role,permission_id]
+                        while item != None:
+                            user["permission"].append(item[0]);
+                            item = cursor.fetchone();
 
                     user = Json.dumps(user);
                     redisConnection.set(token,user,30*60);
