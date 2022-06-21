@@ -1,32 +1,40 @@
 
-import  json as Json;
+
+import flask;
 
 import service.UserService as UserService;
 
-userService = UserService.UserService();
+class Controller:
+    def __init__(self) :
+        self.userService = UserService.Service();
 
-class UserController:
+    def register(self,request):
+        response = self.userService.register(request);
+        return response;
+
     def login(self,request):
-        user = request.json;
-        if user != None:
-            userCorrect = userService.getUserByUsername(user["username"]);
-            response = {};
-            if userCorrect != None and \
-                    user["password"] == userCorrect.getPassword() :
-                response["result"] = "success";
-            else:
-                response["result"] = "failed";
-            return Json.dumps(response);
-        else:
-            return "";
+        response = self.userService.login(request);
+        return response;
 
-    def users(self):
-        users = userService.allUsers();
-        response = [];
-        for user in users:
-            userItem = {};
-            userItem["id"] = user.getId();
-            userItem["username"] = user.getUsername();
-            userItem["password"] = user.getPassword();
-            response.append(userItem);
-        return Json.dumps(response);
+    def logout(self,request):
+        response = self.userService.logout(request);
+        return response;
+
+'''
+    blueprint & route config
+'''
+blueprint = flask.Blueprint("userController",__name__);
+__controller = Controller();
+__urlPrefix = "/user";
+
+@blueprint.route(__urlPrefix + "/register",methods=['POST'])
+def __register():
+    return __controller.register(flask.request);
+
+@blueprint.route(__urlPrefix + "/login",methods=['POST'])
+def __login():
+    return __controller.login(flask.request);
+
+@blueprint.route(__urlPrefix + "/logout",methods=['POST'])
+def __logout():
+    return __controller.logout(flask.request);

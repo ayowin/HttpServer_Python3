@@ -1,0 +1,7 @@
+.idea
+.vscode
+.mvn
+.log
+*.iml
+__pycache__
+venv
