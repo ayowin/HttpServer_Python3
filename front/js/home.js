@@ -40,7 +40,13 @@ layui.define(['layer'], function(exports){
                 if(data.result == "success"){
                     alert("门已开启！");
                 } else {
-                    alert("没有钥匙！");
+                    if(data.reason == "unlimited"){
+                        alert("没有钥匙！");
+                    } else {
+                        alert("登录已失效，请重新登录！");
+                        window.sessionStorage.removeItem("token");
+                        location.href = "index.html";
+                    }
                 }
             }
         });
