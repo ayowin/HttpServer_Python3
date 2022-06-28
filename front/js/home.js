@@ -42,7 +42,7 @@ layui.define(['layer'], function(exports){
                 } else {
                     if(data.reason == "token invalid"){
                         alert("登录已失效，请重新登录！");
-                        window.sessionStorage.removeItem("token");
+                        window.localStorage.removeItem("token");
                         location.href = "index.html";
                     } else if(data.reason == "unlimited"){
                         alert("没有钥匙！");
@@ -80,7 +80,7 @@ layui.define(['layer'], function(exports){
                 } else {
                     if(data.reason == "token invalid"){
                         alert("登录已失效，请重新登录！");
-                        window.sessionStorage.removeItem("token");
+                        window.localStorage.removeItem("token");
                         location.href = "index.html";
                     } else {
                         alert("未知原因，请联系开发者！");
