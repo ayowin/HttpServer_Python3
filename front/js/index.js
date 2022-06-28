@@ -13,10 +13,10 @@ layui.define(['layer'], function(exports){
 
     var refreshVerifyCode = function(){
         $.ajax({
-            type:"POST",
-            url:"http://127.0.0.1:8080/default/verifyCode",
-            dataType:"json",
-            success:function (data) {
+            type: "POST",
+            url: "http://127.0.0.1:8080/default/verifyCode",
+            dataType: "json",
+            success: function (data) {
                 verifyCodeId = data.id;
                 $("#verifyCodeImg").attr("src","data:image/jpeg;base64," + data.base64);
             }
@@ -32,14 +32,14 @@ layui.define(['layer'], function(exports){
         requestJson = JSON.stringify(requestJson);
 
         $.ajax({
-            type:"POST",
-            url:"http://127.0.0.1:8080/user/login",
+            type: "POST",
+            url: "http://127.0.0.1:8080/user/login",
             contentType: "application/json", 
-            dataType:"json",
-            data:requestJson,
-            success:function (data) {
+            dataType: "json",
+            data: requestJson,
+            success: function (data) {
                 if(data.result == "success"){
-                    window.sessionStorage.setItem("token",data.token);
+                    window.localStorage.setItem("token",data.token);
                     location.href = "home.html";
                 } else {
                     if(data.reason == "invalid verify code"){
@@ -63,12 +63,12 @@ layui.define(['layer'], function(exports){
         requestJson = JSON.stringify(requestJson);
 
         $.ajax({
-            type:"POST",
-            url:"http://127.0.0.1:8080/user/register",
+            type: "POST",
+            url: "http://127.0.0.1:8080/user/register",
             contentType: "application/json", 
-            dataType:"json",
-            data:requestJson,
-            success:function (data) {
+            dataType: "json",
+            data: requestJson,
+            success: function (data) {
                 if(data.result == "success"){
                     alert("注册成功！");
                     $("#usernameInput").val("");
@@ -95,4 +95,3 @@ layui.define(['layer'], function(exports){
 
     exports('index', {}); 
 });
-

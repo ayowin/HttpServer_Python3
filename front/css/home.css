@@ -16,3 +16,15 @@ body{
     color: blue;
     cursor: pointer;
 }
+
+.itemDiv{
+    display: inline-table;
+    background-color: lightblue;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid gray;
+}
+
+.itemDiv *{
+    vertical-align: middle;
+}

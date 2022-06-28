@@ -27,5 +27,8 @@ class Service:
             else :
                 response["result"] = "failed";
                 response["reason"] = "token invalid";
+        else:
+            response["result"] = "failed";
+            response["reason"] = "request data incorrect";
 
         return Json.dumps(response);
